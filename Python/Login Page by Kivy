@@ -1,0 +1,189 @@
+import kivy
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+from kivy.uix.popup import Popup
+from kivy.uix.screenmanager import ScreenManager, Screen
+
+import sqlite3
+
+# Database Setup
+def create_database():
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    c.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL UNIQUE,
+        password TEXT NOT NULL
+    )
+    ''')
+    conn.commit()
+    conn.close()
+
+# Authenticate user credentials from the database
+def authenticate_user(username, password):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, password))
+    result = c.fetchone()
+    conn.close()
+    return result is not None
+
+# Register new user into the database (renamed to avoid conflict with class method)
+def register_user_in_db(username, password):
+    conn = sqlite3.connect('users.db')
+    c = conn.cursor()
+    try:
+        c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+        conn.commit()
+        return True
+    except sqlite3.IntegrityError:
+        return False
+    finally:
+        conn.close()
+
+# Screen for Login
+class LoginScreen(BoxLayout):
+    def __init__(self, **kwargs):
+        super(LoginScreen, self).__init__(**kwargs)
+        self.orientation = 'vertical'
+        self.padding = [50, 100, 50, 50]
+        self.spacing = 20
+
+        # Title
+        self.title_label = Label(text="[b]Login Page[/b]", font_size=32, markup=True, color=[0.5, 0.5, 1, 1], size_hint=(1, 0.2))
+        self.add_widget(self.title_label)
+
+        # Username input
+        self.username_input = TextInput(hint_text="Enter Username", multiline=False, size_hint=(1, 0.2))
+        self.add_widget(self.username_input)
+
+        # Password input
+        self.password_input = TextInput(hint_text="Enter Password", multiline=False, password=True, size_hint=(1, 0.2))
+        self.add_widget(self.password_input)
+
+        # Login button
+        self.login_button = Button(text="Login", size_hint=(1, 0.2), background_color=(0.2, 0.6, 0.8, 1), font_size=20)
+        self.login_button.bind(on_press=self.validate_user)
+        self.add_widget(self.login_button)
+
+        # Register Button
+        self.register_button = Button(text="New User? Register Here", size_hint=(1, 0.2), background_color=(0.2, 0.6, 0.4, 1), font_size=16)
+        self.register_button.bind(on_press=self.open_register)
+        self.add_widget(self.register_button)
+
+    # Validate user credentials for login
+    def validate_user(self, instance):
+        username = self.username_input.text
+        password = self.password_input.text
+
+        if len(username) == 0 or len(password) == 0:
+            self.show_popup("Login Failed", "Username and password cannot be empty.")
+        elif authenticate_user(username, password):
+            self.show_popup("Login Failed", "Invalid username or password.")
+        else:
+            self.show_popup("Login Successful", f"Welcome {username}!")
+            
+
+    # Open registration screen
+    def open_register(self, instance):
+        self.parent.manager.current = "register"
+
+    # Popup message for user feedback
+    def show_popup(self, title, message):
+        popup_layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+        popup_label = Label(text=message)
+        popup_button = Button(text="Close", size_hint=(1, 0.25))
+
+        popup_layout.add_widget(popup_label)
+        popup_layout.add_widget(popup_button)
+
+        popup = Popup(title=title, content=popup_layout, size_hint=(0.5, 0.5))
+        popup_button.bind(on_press=popup.dismiss)
+        popup.open()
+
+# Screen for Register
+class RegisterScreen(BoxLayout):
+    def __init__(self, **kwargs):
+        super(RegisterScreen, self).__init__(**kwargs)
+        self.orientation = 'vertical'
+        self.padding = [50, 50, 50, 50]
+        self.spacing = 20
+
+        # Title
+        self.title_label = Label(text="[b]Register New User[/b]", font_size=32, markup=True, color=[0.5, 0.5, 1, 1], size_hint=(1, 0.2))
+        self.add_widget(self.title_label)
+
+        # Username input
+        self.username_input = TextInput(hint_text="Choose Username", multiline=False, size_hint=(1, 0.2))
+        self.add_widget(self.username_input)
+
+        # Password input
+        self.password_input = TextInput(hint_text="Choose Password", multiline=False, password=True, size_hint=(1, 0.2))
+        self.add_widget(self.password_input)
+
+        # Register button
+        self.register_button = Button(text="Register", size_hint=(1, 0.2), background_color=(0.2, 0.6, 0.8, 1), font_size=20)
+        self.register_button.bind(on_press=self.register_user)
+        self.add_widget(self.register_button)
+
+        # Back to Login button
+        self.back_button = Button(text="Back to Login", size_hint=(1, 0.2), background_color=(0.2, 0.6, 0.4, 1), font_size=16)
+        self.back_button.bind(on_press=self.go_back_to_login)
+        self.add_widget(self.back_button)
+
+    # Register new user
+    def register_user(self, instance):
+        username = self.username_input.text
+        password = self.password_input.text
+
+        if len(username) == 0 or len(password) == 0:
+            self.show_popup("Registration Failed", "Username and password cannot be empty.")
+        elif register_user_in_db(username, password):
+            self.show_popup("Registration Failed", "Username already exists.")              
+            
+        else:
+            self.show_popup("Registration Successful", "You can now login.")
+
+    # Go back to login screen
+    def go_back_to_login(self, instance):
+        self.parent.manager.current = "login"
+
+    # Popup message for user feedback
+    def show_popup(self, title, message):
+        popup_layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+        popup_label = Label(text=message)
+        popup_button = Button(text="Close", size_hint=(1, 0.25))
+
+        popup_layout.add_widget(popup_label)
+        popup_layout.add_widget(popup_button)
+
+        popup = Popup(title=title, content=popup_layout, size_hint=(0.5, 0.5))
+        popup_button.bind(on_press=popup.dismiss)
+        popup.open()
+
+# App and Screen Manager
+class LoginApp(App):
+    def build(self):
+        sm = ScreenManager()
+
+        # Adding Login Screen
+        login_screen = Screen(name="login")
+        login_screen.add_widget(LoginScreen())
+        sm.add_widget(login_screen)
+
+        # Adding Register Screen
+        register_screen = Screen(name="register")
+        register_screen.add_widget(RegisterScreen())
+        sm.add_widget(register_screen)
+
+        return sm
+
+# Main execution
+if __name__ == '__main__':  
+    create_database()  
+    # Create database if not already created
+    LoginApp().run()
