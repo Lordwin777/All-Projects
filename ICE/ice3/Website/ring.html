@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ring Topology Animation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet"> <!-- Google Font -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0; /* Remove default margin */
+            padding: 20px; /* Add padding to body */
+        }
+        .container {
+            border: 2px solid #007bff; /* Outline color */
+            border-radius: 10px; /* Rounded corners */
+            padding: 20px; /* Inner padding */
+            background-color: white; /* Background color of the box */
+            max-width: 800px; /* Max width of the box */
+            margin: auto; /* Center the box */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+        }
+        h1 {
+            font-family: 'Roboto', sans-serif; /* Use the new font */
+            font-size: 2.5em; /* Increase title size */
+            color: #007bff; /* Title color */
+            margin-bottom: 20px; /* Space below the title */
+        }
+        .ring {
+            width: 300px; /* Width of the ring */
+            height: 300px; /* Height of the ring */
+            position: relative;
+            margin: 50px auto; /* Center the ring */
+            border-radius: 50%; /* Make it circular */
+            border: 2px solid #007bff; /* Ring outline */
+        }
+        .device {
+            width: 50px;
+            height: 50px;
+            background-color: #28a745;
+            border-radius: 10px;
+            position: absolute;
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%); /* Adjust for the center */
+        }
+        .device-label {
+            color: black; /* Text color */
+            font-weight: bold; /* Make text bold */
+            text-align: center;
+            line-height: 50px; /* Center text vertically */
+        }
+        .path {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px; /* Diameter of the ring */
+            height: 300px; /* Diameter of the ring */
+            border-radius: 50%; /* Make it circular */
+            border: 2px dashed rgba(0, 123, 255, 0.5); /* Dashed path */
+            transform: translate(-50%, -50%); /* Center the path */
+            pointer-events: none; /* Prevent interaction */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Ring Topology Animation</h1>
+        <div class="ring">
+            <div class="path"></div> <!-- Dashed path -->
+            <div class="device device1" style="transform: translate(-50%, -50%) rotate(0deg) translate(125px) rotate(0deg);">
+                <div class="device-label">PC 1</div>
+            </div>
+            <div class="device device2" style="transform: translate(-50%, -50%) rotate(45deg) translate(125px) rotate(-45deg);">
+                <div class="device-label">PC 2</div>
+            </div>
+            <div class="device device3" style="transform: translate(-50%, -50%) rotate(90deg) translate(125px) rotate(-90deg);">
+                <div class="device-label">PC 3</div>
+            </div>
+            <div class="device device4" style="transform: translate(-50%, -50%) rotate(135deg) translate(125px) rotate(-135deg);">
+                <div class="device-label">PC 4</div>
+            </div>
+ <div class="device device5" style="transform: translate(-50%, -50%) rotate(180deg) translate(125px) rotate(-180deg);">
+                <div class="device-label">PC 5</div>
+            </div>
+            <div class="device device6" style="transform: translate(-50%, -50%) rotate(225deg) translate(125px) rotate(-225deg);">
+                <div class="device-label">PC 6</div>
+            </div>
+            <div class="device device7" style="transform: translate(-50%, -50%) rotate(270deg) translate(125px) rotate(-270deg);">
+                <div class="device-label">PC 7</div>
+            </div>
+            <div class="device device8" style="transform: translate(-50%, -50%) rotate(315deg) translate(125px) rotate(-315deg);">
+                <div class="device-label">PC 8</div>
+            </div>
+        </div>
+
+        <script>
+            // Animation logic for packet movement in the ring
+            const ring = document.querySelector('.ring');
+            const packet = document.createElement('div');
+            packet.style.width = '20px';
+            packet.style.height = '20px';
+            packet.style.backgroundColor = 'red';
+            packet.style.position = 'absolute';
+            packet.style.top = '50%';
+            packet.style.left = '50%';
+            packet.style.transform = 'translate(-50%, -50%)';
+            ring.appendChild(packet);
+
+            let angle = 0; // Starting angle for the packet
+            const movePacket = () => {
+                angle += 2; // Adjust speed here
+                const radius = 125; // Radius of the ring
+                const x = radius * Math.cos(angle * Math.PI / 180);
+                const y = radius * Math.sin(angle * Math.PI / 180);
+                packet.style.left = `calc(50% + ${x}px)`;
+                packet.style.top = `calc(50% + ${y}px)`;
+
+                if (angle < 360) {
+                    requestAnimationFrame(movePacket);
+                } else {
+                    angle = 0; // Reset angle
+                    movePacket(); // Restart animation
+                }
+            };
+
+            movePacket(); // Start the packet movement
+        </script>
+    </div>
+
+</body>
+</html>

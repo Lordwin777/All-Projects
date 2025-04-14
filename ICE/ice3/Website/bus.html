@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Topology Animation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet"> <!-- Google Font -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0; /* Remove default margin */
+            padding: 20px; /* Add padding to body */
+        }
+        .container {
+            border: 2px solid #007bff; /* Outline color */
+            border-radius: 10px; /* Rounded corners */
+            padding: 20px; /* Inner padding */
+            background-color: white; /* Background color of the box */
+            max-width: 800px; /* Max width of the box */
+            margin: auto; /* Center the box */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+        }
+        h1 {
+            font-family: 'Roboto', sans-serif; /* Use the new font */
+            font-size: 2.5em; /* Increase title size */
+            color: #007bff; /* Title color */
+            margin-bottom: 20px; /* Space below the title */
+        }
+        .bus {
+            width: 100%;
+            height: 20px;
+            background-color: #007bff;
+            position: relative;
+            margin: 50px 0;
+        }
+        .device {
+            width: 50px;
+            height: 50px;
+            background-color: #28a745;
+            border-radius: 10px;
+            position: absolute;
+            top: -15px;
+        }
+        .device-label {
+            color: black; /* Text color */
+            font-weight: bold; /* Make text bold */
+            margin-top: 5px; /* Space between device and label */
+        }
+        /* Positioning devices */
+        .device1 { left: 10%; }
+        .device2 { left: 30%; }
+        .device3 { left: 50%; }
+        .device4 { left: 70%; }
+        .device5 { left: 90%; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Bus Topology Animation</h1>
+        <div class="bus">
+            <div class="device device1">
+                <div class="device-label">PC 1</div>
+            </div>
+            <div class="device device2">
+                <div class="device-label">PC 2</div>
+            </div>
+            <div class="device device3">
+                <div class="device-label">PC 3</div>
+            </div>
+            <div class="device device4">
+                <div class="device-label">PC 4</div>
+            </div>
+            <div class="device device5">
+                <div class="device-label">PC 5</div>
+            </div>
+        </div>
+
+        <script>
+            // Animation logic can be added here
+            const bus = document.querySelector('.bus');
+            const packet = document.createElement('div');
+            packet.style.width = '20px';
+            packet.style.height = '20px';
+            packet.style.backgroundColor = 'red';
+            packet.style.position = 'absolute';
+            packet.style.top = '0';
+            bus.appendChild(packet);
+
+            let position = 0;
+            const movePacket = () => {
+                if (position < bus.offsetWidth) {
+                    packet.style.left = position + 'px';
+                    position += 2; // Adjust speed here
+                    requestAnimationFrame(movePacket);
+                } else {
+                    position = 0; // Reset position
+                    movePacket(); // Restart animation
+                }
+            };
+
+            movePacket();
+        </script>
+    </div>
+
+</body>
+</html>

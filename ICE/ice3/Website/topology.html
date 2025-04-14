@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Topologies</title>
+    <link rel="stylesheet" href="topology.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #004085;
+            color: white;
+        }
+
+        nav ol {
+            list-style: none;
+            padding: 0;
+        }
+
+        nav ol li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        nav ol li a {
+            color: #f8f9fa;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #004085;
+        }
+
+        .image-box {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .image-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .image-box h4 {
+            margin-top: 10px;
+            color: #555;
+            font-size: 1.1em;
+        }
+
+        ul {
+            list-style-type: disc;
+            margin: 10px 0 20px 40px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #004085;
+            color: white;
+        }
+
+        /* Responsive Layout */
+        @media screen and (min-width: 768px) {
+            .image-row {
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: wrap;
+            }
+
+            .image-box {
+                flex: 1 1 calc(33% - 40px);
+                margin: 10px;
+            }
+        }
+
+        /* Animations Section Styling */
+        #topology-links {
+            text-align: center;
+            padding: 2rem 0;
+            background-color: #e9ecef;
+        }
+
+        .image-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .image-box {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .image-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .image-box h4 a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        .image-box h4 a:hover {
+            text-decoration: underline;
+        }
+
+        /* Learn More Button Styling */
+        .learn-more {
+            margin-top: 30px;
+        }
+
+        .learn-more-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #3b82f6;
+            color: white;
+            border-radius: 50px; /* Oval shape */
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .learn-more-button:hover {
+            background-color: #2563eb;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Topologies - Details</h1>
+        <nav>
+            <ol>
+                <li><a href="#bus">Bus Topology</a></li>
+                <li><a href="#ring">Ring Topology</a></li>
+                <li><a href="# star">Star Topology</a></li>
+                <li><a href="#mesh">Mesh Topology</a></li>
+                <li><a href="#hybrid">Hybrid Topology</a></li>
+                <li><a href="#topology-links">Animations</a></li> <!-- Updated link to animations section -->
+            </ol>
+        </nav>
+    </header>
+    <main>
+        <!-- Bus Topology -->
+        <section id="bus">
+            <h2>Bus Topology</h2>
+            <div class="image-box">
+                <img src="bus.png" alt="Bus Topology">
+                <h4>Bus Topology</h4>
+            </div>
+            <p><strong>Bus Topology:</strong> In a bus topology, all devices are connected to a single central cable, known as the bus.</p>
+            <p>Data sent from one device travels along the bus until it reaches its destination.</p>
+        </section>
+
+        <!-- Ring Topology -->
+        <section id="ring">
+            <h2>Ring Topology</h2>
+            <div class="image-box">
+                <img src="ring.png" alt="Ring Topology">
+                <h4>Ring Topology</h4>
+            </div>
+            <p><strong>Ring Topology:</strong> In a ring topology, each device is connected to two other devices, forming a circular pathway for data.</p>
+            <p>Data travels in one direction (or both in a dual ring).</p>
+        </section>
+
+        <!-- Star Topology -->
+        <section id="star">
+            <h2>Star Topology</h2>
+            <div class="image-box">
+                <img src="star.png" alt="Star Topology">
+                <h4>Star Topology</h4>
+            </div>
+            <p><strong>Star Topology:</strong> In a star topology, all devices are connected to a central hub or switch. The hub acts as a conduit to transmit data to other devices in the network.</p>
+            <p>Data is sent from a device to the hub, which then forwards it to the intended recipient.</p>
+        </section>
+
+        <!-- Mesh Topology -->
+        <section id="mesh">
+            <h2>Mesh Topology</h2>
+            <div class="image-box">
+                <img src="mesh.png" alt="Mesh Topology">
+                <h4>Mesh Topology</h4>
+            </div>
+            <p><strong>Mesh Topology:</strong> In a mesh topology, every device is connected to every other device, allowing for multiple pathways for data to travel.</p>
+        </section>
+
+        <!-- Hybrid Topology -->
+        <section id="hybrid">
+            <h2>Hybrid Topology</h2>
+            <div class="image-box">
+                <img src="hybrid.png" alt="Hybrid Topology">
+                <h4>Hybrid Topology</h4>
+            </div>
+            <p><strong>Hybrid Topology:</strong> A hybrid topology combines two or more different types of network topologies, such as star, bus, ring, or mesh, to create a customized design.</p>
+        </section>
+
+        <!-- Animations Section -->
+        <section id="topology-links">
+            <h2>Network Topology Animation Links</h2>
+            <div class="image-row">
+                <div class="image-box">
+                    <h4><a href="bus.html">Bus Topology</a></h4>
+                    <p>In a bus topology, all devices are connected to a single central cable, known as the bus.</p>
+                </div>
+                <div class="image-box">
+                    <h4><a href="ring.html">Ring Topology</a></h4>
+                    <p>In a ring topology, each device is connected to two other devices, forming a circular pathway for data.</p>
+                </div>
+                <div class="image-box">
+                    <h4><a href="star.html">Star Topology</a></h4>
+                    <p>In a star topology, all devices are connected to a central hub or switch.</p>
+                </div>
+                <div class="image-box">
+                    <h4><a href="mesh.html">Mesh Topology</a></h4>
+                    <p>In a mesh topology, every device is connected to every other device, allowing for multiple pathways for data to travel.</p>
+                </div>
+                <div class="image-box">
+                    <h4><a href="hybrid.html">Hybrid Topology</a></h4>
+                    <p>A hybrid topology combines two or more different types of network topologies.</p ```html
+                </div>
+            </div>
+            <div class="learn-more">
+                <a href="#animations" class="learn-more-button">Learn More</a>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Network Topologies. All rights reserved.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Hybrid Topology Animation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #f0f4f8;
+            --text-color: #2c3e50;
+            --connection-color: #95a5a6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 1100px;
+            height: 700px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topology-title {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .main-bus {
+            position: absolute;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(to right, #3498db, #2980b9);
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .switch {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            border-radius: 50%;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+            z-index: 2;
+            transition: transform 0.3s ease;
+        }
+
+        .switch:hover {
+            transform: scale(1.05);
+        }
+
+        .switch-label {
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .device {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            border-radius: 50%;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            z-index: 3;
+        }
+
+        .device:hover {
+            transform: scale(1.1);
+        }
+
+        .device-label {
+            font-size: 0.7em;
+            margin-top: 5px;
+        }
+
+        .connection {
+            position: absolute;
+            background: linear-gradient(to right, #95a5a6, #7f8c8d);
+            height: 3px;
+            opacity: 0.7;
+            z-index: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .connection:hover {
+            opacity: 1;
+        }
+
+        .packet {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ff6b6b, #ee5253);
+            box-shadow: 0 0 10px rgba(255,107,107,0.5);
+            animation: pulse 1s infinite alternate;
+            z-index: 4;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(0.8); }
+            to { transform: scale(1.2); }
+        }
+
+        /* Switch Positioning */
+        #switch1 { top: 200px; left: 250px; }
+        #switch2 { top: 200px; right: 250px; }
+
+        /* Device Positioning for Switch 1 */
+        #device1 { top: 100px; left: 100px; }
+        #device2 { top: 300px; left: 100px; }
+        #device3 { top: 200px; left: 50px; }
+
+        /* Device Positioning for Switch 2 */
+        #device4 { top: 100px; right: 100px; }
+        #device5 { top: 300px; right: 100px; }
+        #device6 { top: 200px; right: 50px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="topology-title">Hybrid Network Topology</h1>
+        
+        <div class="main-bus"></div>
+
+        <!-- Switches -->
+        <div id="switch1" class="switch">
+            Switch 1
+            <span class="switch-label">Central Node</span>
+        </div>
+        <div id="switch2" class="switch">
+            Switch 2
+            <span class="switch-label">Central Node</span>
+        </div>
+
+        <!-- Devices for Switch 1 -->
+        <div id="device1" class="device">
+            PC 1
+            <span class="device-label">Client</span>
+        </div>
+        <div id="device2" class="device">
+            PC 2
+            <span class="device-label">Client</span>
+        </div>
+        <div id="device3" class="device">
+            PC 3
+            <span class="device-label">Client</span>
+        </div>
+
+        <!-- Devices for Switch 2 -->
+        <div id="device4" class="device">
+            PC 4
+            <span class="device-label">Client</span>
+        </div>
+        <div id="device5" class="device">
+            PC 5
+            <span class="device-label">Client</span>
+        </div>
+        <div id="device6" class="device">
+            PC 6
+            <span class="device-label">Client</span>
+        </div>
+    </div>
+
+    <script>
+        class HybridTopologyAnimation {
+            constructor() {
+                this.container = document.querySelector('.container');
+                this.switches = [
+                    document.getElementById('switch1'),
+                    document.getElementById('switch2')
+                ];
+                this.deviceGroups = [
+                    [
+                        document.getElementById('device1'),
+                        document.getElementById('device2'),
+                        document.getElementById('device3')
+                    ],
+                    [
+                        document.getElementById('device4'),
+                        document.getElementById('device5'),
+                        document.getElementById('device6')
+                    ]
+                ];
+                this.mainBus = document.querySelector('.main-bus');
+                this.connections = [];
+    
+                this.init();
+            }
+    
+            createConnection(start, end, type = 'default') {
+                const connection = document.createElement('div');
+                connection.classList.add('connection');
+                
+                // Different styles for different connection types
+                if (type === 'bus') {
+                    connection.style.background = 'linear-gradient(to right, #3498db, #2980b9)';
+                    connection.style.height = '5px';
+                }
+                
+                const startRect = start.getBoundingClientRect();
+                const endRect = end.getBoundingClientRect();
+                
+                const containerRect = this.container.getBoundingClientRect();
+                
+                const startX = startRect.left - containerRect.left + startRect.width / 2;
+                const startY = startRect.top - containerRect.top + startRect.height / 2;
+                const endX = endRect.left - containerRect.left + endRect.width / 2;
+                const endY = endRect.top - containerRect.top + endRect.height / 2;
+                
+                const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+                const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
+                
+                connection.style.width = `${length}px`;
+                connection.style.transformOrigin = '0 0';
+                connection.style.transform = `rotate(${angle}deg)`;
+                connection.style.left = `${startX}px`;
+                connection.style.top = `${startY}px`;
+                
+                this.container.appendChild(connection);
+                this.connections.push(connection);
+                return connection;
+            }
+    
+            createPacket(connection) {
+                const packet = document.createElement('div');
+                packet.classList.add('packet');
+                
+                // Randomize packet color and size slightly
+                const colorVariations = [
+                    'radial-gradient(circle at 30% 30%, #ff6b6b, #ee5253)',
+                    'radial-gradient(circle at 30% 30%, #3498db, #2980b9)',
+                    'radial-gradient(circle at 30% 30%, #2ecc71, #27ae60)'
+                ];
+                packet.style.background = colorVariations[Math.floor(Math.random() * colorVariations.length)];
+                packet.style.width = `${10 + Math.random() * 5}px`;
+                packet.style.height = `${10 + Math.random() * 5}px`;
+                
+                connection.appendChild(packet);
+    
+                let progress = 0;
+                const animate = () => {
+                    progress += 3 + Math.random();
+                    packet.style.left = `${progress}px`;
+                    
+                    if (progress < connection.offsetWidth) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        connection.removeChild(packet);
+                    }
+                };
+                animate();
+            }
+    
+            animateSwitchActivity() {
+                // Pulsing effect for switches
+                this.switches.forEach(switchEl => {
+                    switchEl.animate([
+                        { transform: 'scale(1)' },
+                        { transform: 'scale(1.05)' },
+                        { transform: 'scale(1)' }
+                    ], {
+                        duration: 2000,
+                        iterations: Infinity,
+                        easing: 'ease-in-out'
+                    });
+                });
+            }
+    
+            simulateNetworkTraffic() {
+                // Connections between switches and devices
+                this.deviceGroups.forEach((devices, switchIndex) => {
+                    devices.forEach(device => {
+                        const connection = this.createConnection(this.switches[switchIndex], device);
+                        
+                        // Random packet transmission
+                        const packetInterval = setInterval(() => {
+                            this.createPacket(connection);
+                        }, 2000 + Math.random() * 3000);
+                    });
+                });
+    
+                // Connections between switches and main bus
+                this.switches.forEach(switchElement => {
+                    const busConnection = this.createConnection(this.mainBus, switchElement, 'bus');
+                    
+                    // Continuous packet transmission on bus
+                    const busPacketInterval = setInterval(() => {
+                        this.createPacket(busConnection);
+                    }, 1500 + Math.random() * 2000);
+                });
+            }
+    
+            init() {
+                // Animate switch activity
+                this.animateSwitchActivity();
+                
+                // Start network traffic simulation
+                this.simulateNetworkTraffic();
+            }
+        }
+    
+        // Initialize the animation when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const topologyAnimation = new HybridTopologyAnimation();
+        });
+    </script>
+
+</body>
+</html>

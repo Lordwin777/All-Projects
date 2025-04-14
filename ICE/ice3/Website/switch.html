@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Switching Techniques Explained</title>
+    <link rel="stylesheet" href="switch.css">
+    <script src="three.r134.min.js"></script>
+    <script src="vanta.waves.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            VANTA.WAVES({
+                el: "#vanta-background",
+                mouseControls: true,
+                touchControls: true,
+                gyroControls: false,
+                minHeight: 200.00,
+                minWidth: 200.00,
+                scale: 1.00,
+                scaleMobile: 1.00,
+                color: 0x6d7477
+            });
+        });
+    </script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        #vanta-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 1200px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+        }
+
+        .image-box {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .image-box h4 {
+            margin-top: 10px;
+            color: #444;
+            font-size: 1.1em;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        ul {
+            list-style-type: disc;
+            margin: 10px 0 20px 20px;
+        }
+
+        @media screen and (min-width: 768px) {
+            .image-row {
+                display: flex;
+                justify-content: space-around;
+                flex-wrap: wrap;
+            }
+
+            .image-box {
+                flex: 1 1 calc(33% - 40px);
+                margin: 10px;
+            }
+        }
+
+        .link-section {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .link-section a {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .link-section a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="vanta-background"></div>
+
+    <div class="container">
+        <h1>Switching Techniques</h1>
+
+        <section id="message-switching">
+            <h2>Message Switching</h2>
+            <p><strong>Definition:</strong> Message switching is a network switching technique where the entire message is forwarded from one switch to another, one hop at a time. The message is stored and forwarded until it reaches the destination.</p>
+            
+            <h3>Characteristics:</h3>
+            <ul>
+                <li>Does not require a dedicated path.</li>
+                <li>Messages are stored temporarily in each switch until the next link is available (store-and-forward).</li>
+                <li>Suitable for applications where delay is acceptable.</li>
+            </ul>
+
+            <div class="image-box">
+                <img src="message_switching.png" alt="Message Switching">
+                <h4>Message Switching Diagram</h4>
+            </div>
+        </section>
+
+        <section id="circuit-switching">
+            <h2>Circuit Switching</h2>
+            <p><strong>Definition:</strong> Circuit switching establishes a dedicated communication path between the sender and receiver before any data is transmitted. The path remains reserved for the entire duration of the communication.</p>
+
+            <h3>Phases:</h3>
+            <ul>
+                <li><strong>Circuit Establishment:</strong> A dedicated path is established before data transmission begins.</li>
+                <li><strong>Data Transfer:</strong> Data flows continuously without intermediate delays.</li>
+                <li><strong>Circuit Disconnection:</strong> The circuit is terminated after the communication session ends.</li>
+            </ul>
+
+            <div class="image-row">
+                <div class="image-box">
+                    <img src="Circuit_Switching.png" alt="Circuit Switching">
+                    <h4>Circuit Switching Diagram</h4>
+                </div>
+                <div class="image-box">
+                    <img src="how_circuit_switch.png" alt="How Circuit Switching Works">
+                    <h4>How Circuit Switching Works</h4>
+                </div>
+            </div>
+        </section>
+
+        <section id="packet-switching">
+            <h2>Packet Switching</h2>
+            <p><strong>Definition:</strong> Packet switching divides data into packets that are transmitted independently over the network. Packets can take different paths and are reassembled at the destination.</p>
+
+            <h3>Characteristics:</h3>
+            <ul>
+                <li>No need for a dedicated path.</li>
+                <li>Packets are routed based on the best available path at the time.</li>
+                <li>Efficient for bursty data traffic.</li>
+            </ul>
+
+            <div class="image-row">
+                <div class="image-box">
+                    <img src="packet_switching.png" alt="Packet Switching">
+                    <h4>Packet Switching Diagram 1</h4>
+                </div>
+                <div class="image-box">
+                    <img src="packet_switching_2.png" alt="Packet Switching">
+                    <h4>Packet Switching Diagram 2</h4>
+                </div>
+            </div>
+        </section>
+
+        <div class="link-section">
+            <h2>Further Reading</h2>
+            <a href="switch_normal.html">Illustration for Circuit Switching</a>
+            <a href="switch_packet_loss.html">Circuit Switching with Loss of Package</a>
+        </div>
+    </div>
+</body>
+</html>

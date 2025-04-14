@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Star Topology</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 2px solid #007bff;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Box shadow for the canvas */
+        }
+        h1 {
+            position: absolute;
+            top: 20px;
+            color: #007bff;
+            font-size: 2.5em;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Animated Star Topology</h1>
+    <canvas id="starCanvas" width="800" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById('starCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const numNodes = 8; // Number of spoke nodes
+        const radius = 100; // Radius of the star
+        const nodes = [];
+        let currentNodeIndex = 0; // Index of the current node to connect
+        let connections = []; // Array to hold connections
+
+        // Create nodes
+        for (let i = 0; i < numNodes; i++) {
+            const angle = (i * 2 * Math.PI) / numNodes;
+            const x = centerX + radius * Math.cos(angle);
+            const y = centerY + radius * Math.sin(angle);
+            nodes.push({ x, y });
+            connections.push(false); // Initialize connections as false
+        }
+
+        function drawStarTopology() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw central node
+            ctx.fillStyle = '#28a745';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, 20, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = 'black';
+            ctx.fillText('Central Node', centerX - 30, centerY - 30);
+
+            // Draw spoke nodes and connections
+            ctx.strokeStyle = '#007bff';
+            ctx.lineWidth = 2;
+
+            nodes.forEach((node, index) => {
+                // Draw connection if active
+                if (connections[index]) {
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.lineTo(node.x, node.y);
+                    ctx.stroke();
+                }
+
+                // Draw spoke node
+                ctx.fillStyle = '#28a745';
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, 15, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = 'black';
+                ctx.fillText(`PC ${index + 1}`, node.x - 20, node.y - 20);
+            });
+        }
+
+        function connectAllNodes() {
+            if (currentNodeIndex < numNodes) {
+                connections[currentNodeIndex] = true; // Activate connection
+                drawStarTopology();
+                currentNodeIndex++;
+                setTimeout(connectAllNodes, 1000); // Delay for effect
+            } else {
+                // After connecting all nodes, you can add additional animations or effects here
+            }
+        }
+
+        connectAllNodes(); // Start connecting nodes
+    </script>
+
+</body>
+</html>

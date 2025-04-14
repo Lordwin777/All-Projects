@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesh Topology Animation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: white;
+            max-width: 1000px; /* Increased width */
+            margin: auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            height: 650px; /* Increased height */
+        }
+        h1 {
+            font-family: 'Roboto', sans-serif;
+            font-size: 2.5em;
+            color: #007bff;
+            margin-bottom: 50px; /* Increased bottom margin */
+            padding: 20px 0; /* Added padding */
+            height: 80px; /* Increased height */
+            line-height: 40px; /* Adjusted line height */
+        }
+        .device {
+            width: 60px;
+            height: 60px;
+            background-color: #28a745;
+            border-radius: 50%;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+        .connection {
+            position: absolute;
+            background-color: #007bff;
+            opacity: 0.5;
+        }
+        /* Device Positioning */
+        #device1 { top: 150px; left: 100px; }
+        #device2 { top: 150px; right: 100px; }
+        #device3 { bottom: 150px; left: 100px; }
+        #device4 { bottom: 150px; right: 100px; }
+        #device5 { top: 350px; left: 450px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mesh Topology Animation</h1>
+        
+        <div id="device1" class="device">PC 1</div>
+        <div id="device2" class="device">PC 2</div>
+        <div id="device3" class="device">PC 3</div>
+        <div id="device4" class="device">PC 4</div>
+        <div id="device5" class="device">PC 5</div>
+    </div>
+
+    <script>
+        function createConnection(start, end) {
+            const connection = document.createElement('div');
+            connection.classList.add('connection');
+            
+            const startRect = start.getBoundingClientRect();
+            const endRect = end.getBoundingClientRect();
+            
+            const containerRect = document.querySelector('.container').getBoundingClientRect();
+            
+            const startX = startRect.left - containerRect.left + startRect.width / 2;
+            const startY = startRect.top - containerRect.top + startRect.height / 2;
+            const endX = endRect.left - containerRect.left + endRect.width / 2;
+            const endY = endRect.top - containerRect.top + endRect.height / 2;
+            
+            const length = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2));
+            const angle = Math.atan2(endY - startY, endX - startX) * 180 / Math.PI;
+            
+            connection.style.width = `${length}px`;
+            connection.style.height = '2px';
+            connection.style.transformOrigin = '0 0';
+            connection.style.transform = `rotate(${angle}deg)`;
+            connection.style.left = `${startX}px`;
+            connection.style.top = `${startY}px`;
+            
+            document.querySelector('.container').appendChild(connection);
+            return connection;
+        }
+
+        function animatePacket(connection) {
+            const packet = document.createElement('div');
+            packet.style.width = '10px';
+            packet.style.height = '10px';
+            packet.style.backgroundColor = 'red';
+            packet.style.borderRadius = '50%';
+            packet.style.position = 'absolute';
+            
+            connection.appendChild(packet);
+
+            let progress = 0;
+            function move() {
+                progress += 2;
+                packet.style.left = `${progress}px`;
+                
+                if (progress < connection.offsetWidth) {
+                    requestAnimationFrame(move);
+                } else {
+                    connection.removeChild(packet);
+                }
+            }
+            move();
+        }
+
+        // Create connections between all devices
+        const devices = [
+            document.getElementById('device1'),
+            document.getElementById('device2'),
+            document.getElementById('device3'),
+            document.getElementById('device4'),
+            document.getElementById('device5')
+        ];
+
+        devices.forEach((device, i) => {
+            devices.slice(i + 1).forEach(otherDevice => {
+                const connection = createConnection(device, otherDevice);
+                
+                // Randomly trigger packet animation
+                setTimeout(() => {
+                    animatePacket(connection);
+                }, Math.random() * 2000);
+            });
+        });
+    </script>
+</body>
+</html>
