@@ -1,0 +1,46 @@
+import tkinter as tk
+from tkinter import filedialog, scrolledtext
+from PIL import Image
+from PIL.ExifTags import TAGS
+
+def extract_metadata(image_path):
+    try:
+        with Image.open(image_path) as img:
+            exif_data = img._getexif()
+            if exif_data:
+                metadata = {}
+                for tag_id, value in exif_data.items():
+                    tag = TAGS.get(tag_id, tag_id)
+                    metadata[tag] = value
+                return metadata
+            else:
+                return {"Error": "No EXIF metadata found"}
+    except Exception as e:
+        return {"Error": str(e)}
+
+def select_image():
+    file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.jpeg *.png *.gif *.bmp")])
+    if file_path:
+        metadata = extract_metadata(file_path)
+        display_metadata(metadata)
+
+def display_metadata(metadata):
+    text_area.delete(1.0, tk.END)
+    for key, value in metadata.items():
+        text_area.insert(tk.END, f"{key}: {value}\n")
+
+# Create the main window
+root = tk.Tk()
+root.title("Image Metadata Extractor")
+root.geometry("600x400")
+
+# Create and pack the button
+select_button = tk.Button(root, text="Select Image", command=select_image)
+select_button.pack(pady=10)
+
+# Create and pack the scrolled text area
+text_area = scrolledtext.ScrolledText(root, wrap=tk.WORD, width=70, height=20)
+text_area.pack(padx=10, pady=10)
+
+# Start the GUI event loop
+root.mainloop()
